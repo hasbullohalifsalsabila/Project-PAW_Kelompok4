@@ -1,0 +1,42 @@
+/* assets/css/style.css - custom modern pure CSS */
+* { box-sizing: border-box; margin:0; padding:0; font-family: Inter, Arial, sans-serif; }
+body { background:#f5f7fb; color:#222; line-height:1.6; padding:20px; }
+.container { max-width:1200px; margin:0 auto; }
+
+/* Topbar */
+.topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; }
+.topbar .brand { font-weight:800; font-size:20px; color:#1a1a1a; }
+.topbar .nav a { margin-left:10px; text-decoration:none; color:#4a77ff; font-weight:600; }
+
+/* Card */
+.card { background:#fff; border-radius:10px; padding:18px; border:1px solid #e6e9ef; box-shadow:0 6px 18px rgba(18,24,40,0.04); margin-bottom:18px; }
+
+/* Buttons */
+.btn { display:inline-block; padding:10px 14px; border-radius:8px; background:#4a77ff; color:#fff; text-decoration:none; font-weight:600; }
+.btn:hover { background:#3c63d4; transform:translateY(-2px); transition:0.15s; }
+.btn-outline { background:transparent; border:1.5px solid #4a77ff; color:#4a77ff; padding:9px 13px; }
+
+/* Grid */
+.grid { display:grid; grid-template-columns: 1fr 320px; gap:20px; align-items:start; }
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+/* Course list */
+.course-title { font-size:18px; font-weight:700; color:#111; }
+.meta { color:#667; font-size:13px; margin-top:6px; }
+
+/* Badges */
+.badge { display:inline-block; padding:6px 10px; border-radius:8px; font-weight:700; color:#fff; font-size:12px; }
+.badge-free { background:#00c853; } .badge-paid { background:#ff9800; }
+
+/* Forms */
+input, select, textarea { width:100%; padding:12px; border-radius:8px; border:1px solid #d6dee9; margin-bottom:12px; }
+label { display:block; margin-bottom:6px; color:#333; font-weight:600; }
+
+/* Material item */
+.material-item { border:1px solid #eef3fb; padding:12px; border-radius:8px; background:#fff; margin-bottom:10px; }
+
+/* Certificate */
+.certificate { width:900px; margin:16px auto; padding:36px; border:3px solid #222; background:#fff; text-align:center; border-radius:10px; }
+
+/* Footer small */
+.footer { text-align:center; color:#889; font-size:13px; margin-top:30px; }
