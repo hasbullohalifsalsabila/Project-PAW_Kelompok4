@@ -159,8 +159,8 @@ kursus_online/
       <a href="https://github.com/hasbullohalifsalsabila">Hasbul</a>
     </td>
     <td align="center">
-      <img src="assets/images/amin.jpg" width="120" style="border-radius:50%;"><br>
-      <a href="https://github.com/fathulamin987">Salwa</a>
+      <img src="assets/images/salwa.jpg" width="120" style="border-radius:50%;"><br>
+      <a href="https://github.com/Salwa24134">Salwa</a>
     </td>
     <td align="center">
       <img src="assets/images/uqi.jpg" width="120" style="border-radius:50%;"><br>
