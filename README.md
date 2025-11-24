@@ -147,16 +147,16 @@ kursus_online/
 <table>
   <tr>
     <td align="center">
-      <img src="assets/images/adib.jpg" width="120" style="border-radius:50%;"><br>
-      <a href="https://github.com/adibilazwar">Azka</a>
+      <img src="assets/images/azka.jpg" width="120" style="border-radius:50%;"><br>
+      <a href="https://github.com/Azkasyaikhu">Azka</a>
     </td>
     <td align="center">
       <img src="assets/images/habiba.jpg" width="120" style="border-radius:50%;"><br>
       <a href="https://github.com/NURHABIBATULUMAH">Fifi</a>
     </td>
     <td align="center">
-      <img src="assets/images/firda.jpeg" width="120" style="border-radius:50%;"><br>
-      <a href="https://github.com/firdanuzula">Hasbul</a>
+      <img src="assets/images/hasbul.jpg" width="120" style="border-radius:50%;"><br>
+      <a href="https://github.com/hasbullohalifsalsabila">Hasbul</a>
     </td>
     <td align="center">
       <img src="assets/images/amin.jpg" width="120" style="border-radius:50%;"><br>
