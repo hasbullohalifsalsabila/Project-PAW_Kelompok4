@@ -151,8 +151,8 @@ kursus_online/
       <a href="https://github.com/Azkasyaikhu">Azka</a>
     </td>
     <td align="center">
-      <img src="assets/images/habiba.jpg" width="120" style="border-radius:50%;"><br>
-      <a href="https://github.com/NURHABIBATULUMAH">Fifi</a>
+      <img src="assets/images/fifi.jpeg" width="120" style="border-radius:50%;"><br>
+      <a href="https://github.com/amelia-fiqriyet">Fifi</a>
     </td>
     <td align="center">
       <img src="assets/images/hasbul.jpg" width="120" style="border-radius:50%;"><br>
@@ -163,8 +163,8 @@ kursus_online/
       <a href="https://github.com/fathulamin987">Salwa</a>
     </td>
     <td align="center">
-      <img src="assets/images/dimas.jpg" width="120" style="border-radius:50%;"><br>
-      <a href="https://github.com/Fahdimas">Uqi</a>
+      <img src="assets/images/uqi.jpg" width="120" style="border-radius:50%;"><br>
+      <a href="https://github.com/uqi08">Uqi</a>
     </td>
   </tr>
 </table>
