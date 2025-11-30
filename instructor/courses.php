@@ -192,16 +192,6 @@ $total_kelas = count($list);
 </style>
 
 <div class="main-content">
-
-    <div class="page-header">
-        <h1 class="page-title">My Courses</h1>
-        
-        <?php if ($total_kelas < 5): ?>
-            <a href="add_course.php" class="btn-add">+ Buat Kelas Baru</a>
-        <?php else: ?>
-            <span class="btn-disabled" title="Anda sudah mencapai batas maksimal 5 kelas">⛔ Batas Maksimal (5/5)</span>
-        <?php endif; ?>
-    </div>
     
     <hr> 
     
