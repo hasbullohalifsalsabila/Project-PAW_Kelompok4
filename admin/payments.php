@@ -247,9 +247,10 @@ try {
 
                 <?php if (count($payments) > 0): ?>
                     <?php foreach ($payments as $p): ?>
+                        <?php $no = 1; ?>
 
                         <tr>
-                            <td>#<?= $p['payment_id'] ?></td>
+                            <td>#<?= $no++ ?></td>
 
                             <td>
                                 <strong><?= htmlspecialchars($p['student']) ?></strong>
