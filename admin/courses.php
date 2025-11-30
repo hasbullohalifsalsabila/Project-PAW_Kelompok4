@@ -20,20 +20,17 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
 <style>
     body { background-color: #fdfbf7; margin: 0; padding: 0; }
 
-    /* KONTAINER UTAMA */
     .main-content {
         margin-left: 250px;
         width: calc(100% - 250px);
         min-height: 100vh;
         box-sizing: border-box;
-        
-        padding-top: 80px; 
+        padding-top: 80px;
         padding-left: 40px;
         padding-right: 40px;
         padding-bottom: 50px;
     }
 
-    /* HEADER HALAMAN */
     .page-header-flex {
         display: flex; justify-content: space-between; align-items: center;
         margin-bottom: 25px;
@@ -45,8 +42,7 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
         font-size: 2rem; color: #2c3e50; margin: 0; 
     }
     .page-desc { color: #777; margin: 5px 0 0 0; font-size: 14px; }
-
-    /* TABEL DATA */
+    
     .table-card { 
         background: white; padding: 25px; border-radius: 12px; 
         box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0ece3;
@@ -59,10 +55,9 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
     }
     td { 
         padding: 15px; border-bottom: 1px solid #eee; 
-        color: #333; vertical-align: top; /* Penting agar teks mulai dari atas */
+        color: #333; vertical-align: top;
     }
 
-    /* LIST KELAS DI DALAM TABEL */
     .course-list { display: flex; flex-direction: column; gap: 8px; }
     
     .course-item {
@@ -74,8 +69,7 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
     .course-item:hover { background-color: #f9f9f9; border-color: #ddd; }
     
     .course-title { font-weight: 600; color: #444; font-size: 13px; display: flex; align-items: center; gap: 5px;}
-    
-    /* Badge Full */
+
     .badge-full {
         background-color: #27ae60; color: white; 
         font-size: 10px; padding: 2px 6px; border-radius: 10px; margin-left: 5px;
@@ -87,13 +81,11 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
     }
     .btn-manage:hover { background: #d4e6f1; }
 
-    /* BADGE KOSONG */
     .badge-empty { 
         background-color: #f0f0f0; color: #888; padding: 5px 10px; 
         border-radius: 4px; font-size: 12px; font-style: italic; display: inline-block;
     }
 
-    /* TOMBOL AKSI (GROUP) */
     .action-group { display: flex; flex-direction: column; gap: 8px; }
 
     .btn-add-course {
@@ -103,11 +95,10 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
         transition: 0.3s;
     }
     .btn-add-course:hover { background: #1a252f; }
-    
-    /* Tombol Disabled */
+
     .btn-disabled {
         background: #ccc; color: #666; cursor: not-allowed;
-        pointer-events: none; /* Mencegah klik */
+        pointer-events: none;
     }
 
     .btn-delete-instructor {
@@ -143,9 +134,11 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
                 </tr>
             </thead>
             <tbody>
+
+                <?php $no = 1; ?>  <!-- NOMOR URUT DIMULAI DARI 1 -->
+
                 <?php foreach ($instructors as $ins): 
-                    // Ambil kelas untuk instruktur ini
-                    // Kita juga hitung jumlah siswa per kelas di sini (subquery)
+
                     $sql_courses = "
                         SELECT c.course_id, c.title, 
                         (SELECT COUNT(*) FROM enrollments e WHERE e.course_id = c.course_id) as total_students
@@ -160,8 +153,10 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
                     $course_count = count($my_courses);
                     $is_limit_reached = $course_count >= MAX_COURSES_PER_INSTRUCTOR;
                 ?>
+
                 <tr>
-                    <td>#<?=$ins['user_id']?></td>
+                    <td><?= $no++ ?></td> <!-- NOMOR URUT -->
+
                     <td>
                         <strong style="font-size:15px; color:#2c3e50;"><?= htmlspecialchars($ins['name']) ?></strong><br>
                         <small style="color:#888;"><?= htmlspecialchars($ins['email']) ?></small><br>
@@ -183,18 +178,18 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
                                             <?php if($is_full): ?>
                                                 <span class="badge-full">✓ FULL</span>
                                             <?php endif; ?>
-                                            <span style="color:#999; font-size:11px; font-weight:normal; margin-left:5px;">
+                                            <span style="color:#999; font-size:11px; margin-left:5px;">
                                                 (<?= $student_count ?>/<?= MAX_STUDENTS_PER_CLASS ?> Siswa)
                                             </span>
                                         </span>
 
                                         <div style="display:flex; gap:8px;">
                                             <a href="manage_course.php?id=<?=$c['course_id']?>" class="btn-manage">
-                                                Kelola &rarr;
+                                                Kelola →
                                             </a>
 
                                             <a href="course_delete.php?id=<?=$c['course_id']?>" 
-                                               onclick="return confirm('Yakin ingin menghapus kelas ini? Semua materi di dalamnya akan ikut hilang!')"
+                                               onclick="return confirm('Yakin ingin menghapus kelas ini? Semua materi di dalamnya akan hilang!')"
                                                style="background:#fdecea; color:#c0392b; padding:4px 8px; border-radius:4px; font-size:11px; font-weight:bold; text-decoration:none;">
                                                 Hapus
                                             </a>
@@ -211,7 +206,7 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
                     <td>
                         <div class="action-group">
                             <?php if($is_limit_reached): ?>
-                                <span class="btn-add-course btn-disabled" title="Batas maksimal kelas tercapai">
+                                <span class="btn-add-course btn-disabled" title="Batas tercapai">
                                     🚫 Batas Tercapai
                                 </span>
                             <?php else: ?>
@@ -222,17 +217,19 @@ const MAX_COURSES_PER_INSTRUCTOR = 5;
 
                             <a href="instructor_delete.php?id=<?= $ins['user_id'] ?>" 
                                class="btn-delete-instructor"
-                               onclick="return confirm('PERINGATAN: Menghapus instruktur ini mungkin akan menghapus semua kelas dan materi yang mereka buat. Yakin ingin melanjutkan?')">
+                               onclick="return confirm('PERINGATAN: Menghapus instruktur ini akan menghapus semua kelas mereka! Yakin?')">
                                🗑 Hapus Instruktur
                             </a>
                         </div>
                     </td>
                 </tr>
+
                 <?php endforeach; ?>
                 
                 <?php if(count($instructors) == 0): ?>
                     <tr><td colspan="4" align="center" style="padding:30px; color:#999;">Belum ada instruktur terdaftar.</td></tr>
                 <?php endif; ?>
+
             </tbody>
         </table>
     </div>
