@@ -1,209 +1,180 @@
 <?php
-// filename: admin/users.php
-
-// 1. Deteksi Error
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require '../config/db.php';
 require 'header.php';
 require 'sidebar.php';
 
-// 2. Logika Filter
-$search = $_GET['search'] ?? '';
-$role   = $_GET['role'] ?? '';
+$uid = $_SESSION['user']['user_id'];
 
-$query = "SELECT user_id, name, email, role, created_at FROM users WHERE 1=1";
+// ==========================================
+// 1. LOGIKA HAPUS NOTIFIKASI (DISMISS)
+// ==========================================
+if (isset($_GET['dismiss_type']) && isset($_GET['dismiss_id'])) {
+    $type = $_GET['dismiss_type'];
+    $id   = $_GET['dismiss_id'];
 
-$params = [];
+    // Simpan riwayat penghapusan agar tidak muncul lagi
+    try {
+        $stmt = $pdo->prepare("INSERT INTO notification_dismissals (user_id, type, item_id) VALUES (?, ?, ?)");
+        $stmt->execute([$uid, $type, $id]);
+    } catch (Exception $e) {
+        // Jika error (misal duplikat), abaikan saja
+    }
 
-if ($search !== '') {
-    $query .= " AND (name LIKE :search OR email LIKE :search)";
-    $params[':search'] = "%$search%";
+    // Refresh halaman agar notif hilang
+    echo "<script>window.location='announcements.php';</script>";
+    exit;
 }
-if ($role !== '') {
-    $query .= " AND role = :role";
-    $params[':role'] = $role;
-}
 
-$query .= " ORDER BY user_id DESC"; // Urutkan dari user terbaru
+// ==========================================
+// 2. AMBIL DATA GABUNGAN (UNION QUERY)
+// ==========================================
+// Mengambil: Pengumuman, Materi, Kuis dari kursus yang diikuti siswa
+$sql = "
+    SELECT * FROM (
+        -- A. PENGUMUMAN DARI ADMIN/INSTRUKTUR
+        SELECT 'announcement' as type, a.announcement_id as item_id, a.title, a.content as description, a.created_at, c.title as course_title
+        FROM announcements a
+        JOIN courses c ON a.course_id = c.course_id
+        JOIN enrollments e ON e.course_id = c.course_id
+        WHERE e.user_id = :uid1
+        
+        UNION ALL
 
-try {
-    $stmt = $pdo->prepare($query);
-    $stmt->execute($params);
-    $users = $stmt->fetchAll();
-} catch (PDOException $e) {
-    die("Error Database: " . $e->getMessage());
-}
+        -- B. MATERI BARU
+        SELECT 'material' as type, m.material_id as item_id, m.title, CONCAT('Materi baru (', m.type, ') telah ditambahkan.') as description, m.created_at, c.title as course_title
+        FROM materials m
+        JOIN courses c ON m.course_id = c.course_id
+        JOIN enrollments e ON e.course_id = c.course_id
+        WHERE e.user_id = :uid2
+
+        UNION ALL
+
+        -- C. KUIS BARU
+        SELECT 'quiz' as type, q.quiz_id as item_id, q.title, 'Kuis baru telah tersedia, silakan kerjakan.' as description, q.created_at, c.title as course_title
+        FROM quizzes q
+        JOIN courses c ON q.course_id = c.course_id
+        JOIN enrollments e ON e.course_id = c.course_id
+        WHERE e.user_id = :uid3
+    ) AS all_notifs
+    
+    -- Filter: Jangan tampilkan yang sudah dihapus user ini
+    WHERE NOT EXISTS (
+        SELECT 1 FROM notification_dismissals nd 
+        WHERE nd.user_id = :uid4 
+        AND nd.type = all_notifs.type 
+        AND nd.item_id = all_notifs.item_id
+    )
+    ORDER BY created_at DESC
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute([
+    ':uid1' => $uid,
+    ':uid2' => $uid,
+    ':uid3' => $uid,
+    ':uid4' => $uid
+]);
+$notifications = $stmt->fetchAll();
 ?>
 
 <style>
-    /* Background Utama */
-    body { background-color: #fdfbf7; margin: 0; padding: 0; }
-
-    /* KONTAINER UTAMA */
+    /* Layout */
+    body { background-color: #fdfbf7; margin: 0; }
     .main-content {
-        margin-left: 250px;
-        width: calc(100% - 250px);
-        min-height: 100vh;
-        box-sizing: border-box;
-        
-        /* Jarak aman dari header */
-        padding-top: 80px; 
-        padding-left: 40px;
-        padding-right: 40px;
-        padding-bottom: 40px;
+        margin-left: 250px; padding: 40px; width: calc(100% - 250px);
+        min-height: 100vh; box-sizing: border-box; padding-top: 80px;
     }
 
-    /* HEADER HALAMAN */
-    .page-header-flex {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 25px;
-        border-bottom: 2px solid #e0dbd0;
-        padding-bottom: 15px;
-    }
     .page-title { 
-        font-family: 'Times New Roman', serif; 
-        font-size: 1.8rem; color: #2c3e50; margin: 0; 
+        font-family: 'Times New Roman', serif; font-size: 2rem; color: #2c3e50; 
+        margin-bottom: 30px; border-bottom: 2px solid #e0dbd0; padding-bottom: 15px;
     }
 
-    /* FILTER BAR (KARTU PUTIH) */
-    .filter-box {
-        background: white; padding: 20px; border-radius: 12px;
+    /* NOTIFICATION LIST */
+    .notif-list { display: flex; flex-direction: column; gap: 20px; }
+
+    /* CARD DESAIN */
+    .notif-card {
+        background: #ffffff; padding: 25px; border-radius: 12px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0ece3;
-        margin-bottom: 25px;
-        display: flex; align-items: center; justify-content: space-between;
-        flex-wrap: wrap; gap: 15px;
+        position: relative; border-left: 5px solid #ccc; transition: transform 0.2s;
     }
-    .filter-left { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-    
-    .form-control { 
-        padding: 10px; border: 1px solid #ccc; border-radius: 6px; 
-        font-size: 14px; min-width: 200px;
-    }
+    .notif-card:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.06); }
 
-    /* TOMBOL */
-    .btn-dark { 
-        background: #2c3e50; color: white; border: none; 
-        padding: 10px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px;
-    }
-    .btn-dark:hover { background: #1a252f; }
+    /* WARNA JENIS NOTIFIKASI */
+    .type-announcement { border-left-color: #e67e22; } /* Oranye */
+    .type-material { border-left-color: #27ae60; }     /* Hijau */
+    .type-quiz { border-left-color: #c0392b; }         /* Merah */
 
-    /* TOMBOL RESET (ABU-ABU) */
-    .btn-reset { 
-        background: #95a5a6; color: white; text-decoration: none; 
-        padding: 10px 20px; border-radius: 6px; font-weight: bold; font-size: 14px;
+    /* BADGE LABEL */
+    .notif-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .badge { 
+        font-size: 11px; font-weight: bold; padding: 4px 10px; border-radius: 20px; 
+        text-transform: uppercase; letter-spacing: 0.5px; 
     }
-    .btn-reset:hover { background: #7f8c8d; }
+    .bg-announcement { background: #fff3e0; color: #e67e22; }
+    .bg-material { background: #e8f5e9; color: #27ae60; }
+    .bg-quiz { background: #ffebee; color: #c0392b; }
 
-    /* TOMBOL TAMBAH (HIJAU) */
-    .btn-add { 
-        background: #27ae60; color: white; text-decoration: none; 
-        padding: 10px 20px; border-radius: 6px; font-weight: bold; font-size: 14px; 
-    }
-    .btn-add:hover { background: #219150; }
+    .course-name { font-size: 13px; color: #888; font-weight: 600; }
 
-    /* TABEL DATA */
-    .table-card { 
-        background: white; padding: 25px; border-radius: 12px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0ece3;
-    }
-    table { width: 100%; border-collapse: collapse; }
-    th { 
-        background: #f8f9fa; padding: 15px; text-align: left; 
-        font-size: 14px; font-weight: bold; color: #555; 
-        border-bottom: 2px solid #eee; 
-    }
-    td { 
-        padding: 15px; border-bottom: 1px solid #eee; color: #333; 
-        font-size: 14px; vertical-align: middle;
-    }
+    /* KONTEN */
+    .notif-title { font-size: 1.4rem; font-weight: bold; color: #2c3e50; margin: 5px 0; font-family: serif; }
+    .notif-desc { color: #555; line-height: 1.6; font-size: 14px; margin-bottom: 10px; }
+    .notif-time { font-size: 12px; color: #999; font-style: italic; }
 
-    /* BADGE ROLE */
-    .badge { padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold; text-transform: capitalize; }
-    .role-admin { background: #2c3e50; color: white; }
-    .role-instructor { background: #e3f2fd; color: #1565c0; }
-    .role-student { background: #f0f0f0; color: #555; border: 1px solid #ddd; }
-
-    /* TOMBOL AKSI */
-    .btn-action { padding: 5px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; font-weight: bold; margin-right: 5px; }
-    .btn-edit { background: #ecf0f1; color: #2c3e50; }
-    .btn-del { background: #ffebee; color: #c62828; }
-
-    @media (max-width: 768px) {
-        .main-content { margin-left: 0; width: 100%; padding-top: 80px; }
-        .filter-box { flex-direction: column; align-items: stretch; }
-        .filter-left { flex-direction: column; align-items: stretch; }
-        .form-control { width: 100%; }
+    /* TOMBOL HAPUS (X) */
+    .btn-close {
+        position: absolute; top: 15px; right: 20px; text-decoration: none;
+        font-size: 1.5rem; color: #ccc; transition: 0.3s; line-height: 1;
     }
+    .btn-close:hover { color: #c0392b; }
+
+    /* EMPTY STATE */
+    .empty-state { text-align: center; padding: 50px; color: #999; border: 2px dashed #ddd; border-radius: 12px; }
 </style>
 
 <div class="main-content">
 
-    <div class="page-header-flex">
-        <h1 class="page-title">Manage Users</h1>
-    </div>
+    <h1 class="page-title">Pusat Informasi</h1>
 
-    <div class="filter-box">
-        <form method="GET" class="filter-left">
-            <input type="text" name="search" class="form-control" placeholder="Cari nama atau email..." value="<?=htmlspecialchars($search)?>">
+    <div class="notif-list">
+        <?php if (count($notifications) > 0): ?>
+            <?php foreach ($notifications as $n): 
+                // Tentukan Label & Warna
+                $label = 'Pengumuman';
+                $bgClass = 'bg-announcement';
+                if($n['type'] == 'material') { $label = 'Materi Baru'; $bgClass = 'bg-material'; }
+                if($n['type'] == 'quiz')     { $label = 'Kuis Baru';   $bgClass = 'bg-quiz'; }
+            ?>
 
-            <select name="role" class="form-control">
-                <option value="">-- Semua Role --</option>
-                <option value="admin" <?=$role=='admin'?'selected':''?>>Admin</option>
-                <option value="instructor" <?=$role=='instructor'?'selected':''?>>Instructor</option>
-                <option value="student" <?=$role=='student'?'selected':''?>>Student</option>
-            </select>
+            <div class="notif-card type-<?= $n['type'] ?>">
+                
+                <a href="announcements.php?dismiss_type=<?=$n['type']?>&dismiss_id=<?=$n['item_id']?>" 
+                   class="btn-close" 
+                   onclick="return confirm('Sembunyikan notifikasi ini dari beranda Anda?')" 
+                   title="Hapus Notifikasi">&times;</a>
 
-            <button class="btn-dark">Filter</button>
-            
-            <a href="users.php" class="btn-reset">✖ Reset</a>
-        </form>
-        
-        <a href="users_add.php" class="btn-add">+ Add User</a>
-    </div>
+                <div class="notif-header">
+                    <span class="badge <?= $bgClass ?>"><?= $label ?></span>
+                    <span class="course-name"><?= htmlspecialchars($n['course_title']) ?></span>
+                </div>
 
-    <div class="table-card">
-        <table>
-            <thead>
-                <tr>
-                    <th width="20%">Name</th>
-                    <th width="25%">Email</th>
-                    <th width="15%">Role</th>
-                    <th width="20%">Joined At</th>
-                    <th width="15%">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php if(count($users) > 0): ?>
-                    <?php foreach ($users as $u): 
-                        // Logika warna badge
-                        $badgeClass = 'role-student';
-                        if($u['role'] == 'admin') $badgeClass = 'role-admin';
-                        if($u['role'] == 'instructor') $badgeClass = 'role-instructor';
-                    ?>
-                    <tr>
-                        <td>#<?=$u['user_id']?></td>
-                        <td><strong><?=htmlspecialchars($u['name'])?></strong></td>
-                        <td><?=htmlspecialchars($u['email'])?></td>
-                        <td>
-                            <span class="badge <?=$badgeClass?>"><?=ucfirst($u['role'])?></span>
-                        </td>
-                        <td><?=date('d M Y', strtotime($u['created_at']))?></td>
-                        <td>
-                            <div style="display: flex; gap: 8px;">
-                                <a href="users_edit.php?id=<?=$u['user_id']?>" class="btn-action btn-edit">Edit</a>
-                                <a href="users_delete.php?id=<?=$u['user_id']?>" class="btn-action btn-del" onclick="return confirm('Yakin ingin menghapus user ini?')">Hapus</a>
-                            </div>
-                        </td>
-                    </tr>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <tr><td colspan="6" align="center" style="padding:30px; color:#999;">User tidak ditemukan.</td></tr>
-                <?php endif; ?>
-            </tbody>
-        </table>
+                <h3 class="notif-title"><?= htmlspecialchars($n['title']) ?></h3>
+                <p class="notif-desc"><?= htmlspecialchars($n['description']) ?></p>
+
+                <div class="notif-time">
+                    Diposting: <?= date('d F Y, H:i', strtotime($n['created_at'])) ?>
+                </div>
+            </div>
+
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="empty-state">
+                <h3>🎉 Semua Bersih!</h3>
+                <p>Tidak ada pengumuman atau notifikasi baru saat ini.</p>
+            </div>
+        <?php endif; ?>
     </div>
 
 </div>
