@@ -160,9 +160,10 @@ try {
             </thead>
             <tbody>
                 <?php if (count($list) > 0): ?>
+                    <?php $no = 1; ?>
                     <?php foreach ($list as $a): ?>
                     <tr>
-                        <td>#<?=$a['announcement_id']?></td>
+                        <td><?=$no++?></td>
                         <td>
                             <span class="badge-course"><?=$a['course_title']?></span><br>
                             <small style="color:#777; margin-top:5px; display:block;">Oleh: <?=$a['instructor']?></small>
