@@ -246,11 +246,11 @@ try {
             <tbody>
 
                 <?php if (count($payments) > 0): ?>
+                    <?php $no = 1; ?>
                     <?php foreach ($payments as $p): ?>
-                        <?php $no = 1; ?>
 
                         <tr>
-                            <td>#<?= $no++ ?></td>
+                            <td><?= $no++ ?></td>
 
                             <td>
                                 <strong><?= htmlspecialchars($p['student']) ?></strong>
