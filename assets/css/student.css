@@ -1,0 +1,179 @@
+body {
+    margin: 0;
+    background: #F4EFE7;
+    font-family: "Inter", sans-serif;
+}
+
+/* TOPBAR */
+.topbar {
+    padding: 15px 40px;
+    background: #FBF8F2;
+    border-bottom: 1px solid #E0D8CE;
+    display: flex;
+    justify-content: space-between;
+}
+
+.topbar-title {
+    font-family: "Playfair Display", serif;
+    font-size: 24px;
+}
+
+.logout {
+    color: #C39A6B;
+    margin-left: 12px;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 210px;
+    background: #EFE8DD;
+    height: 100vh;
+    padding: 25px;
+    position: fixed;
+}
+
+.sidebar a {
+    display: block;
+    margin-bottom: 16px;
+    text-decoration: none;
+    color: #524A42;
+    padding: 10px 14px;
+    border-radius: 8px;
+}
+
+.sidebar a:hover {
+    background: #DACFBE;
+}
+
+/* CONTENT AREA */
+.content {
+    margin-left: 240px;
+    padding: 40px;
+}
+
+.page-title {
+    font-family: "Playfair Display", serif;
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+/* STATS GRID */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 20px;
+}
+
+.stat-card {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.05);
+}
+
+.stat-card h3 {
+    font-size: 30px;
+    margin: 0;
+    color: #C39A6B;
+}
+
+.section-title {
+    margin-top: 40px;
+    font-family: "Playfair Display", serif;
+}
+
+/* CARDS */
+.card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+    gap: 20px;
+}
+
+.card {
+    background: white;
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.06);
+}
+
+.btn-dark {
+    padding: 8px 14px;
+    background: #C39A6B;
+    color: white;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+/* ANNOUNCEMENTS */
+.announcement-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0px 3px 10px rgba(0,0,0,0.06);
+}
+
+.empty {
+    padding: 20px;
+    background: #FFF;
+    border-radius: 12px;
+}
+
+.page-title {
+    font-size: 32px;
+    font-family: "Playfair Display", serif;
+    margin: 30px;
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+    gap: 25px;
+    padding: 30px;
+}
+
+.course-card {
+    background: #FFF;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.course-card .price {
+    font-weight: 600;
+    margin-top: 10px;
+}
+
+.btn-view {
+    padding: 8px 14px;
+    background: #C39A6B;
+    color: #FFF;
+    border-radius: 8px;
+    text-decoration: none;
+}
+
+.review-card {
+    background: #FFF;
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+
+.btn-enroll {
+    padding: 12px 20px;
+    background: #8C5B3F;
+    color: #FFF;
+    border-radius: 12px;
+    text-decoration: none;
+}
+
+.btn-wishlist {
+    padding: 12px 20px;
+    background: #E8DAC4;
+    color: #4C4439;
+    border-radius: 12px;
+    text-decoration: none;
+    margin-left: 10px;
+}
