@@ -192,8 +192,10 @@ $total_kelas = count($list);
 </style>
 
 <div class="main-content">
-    
-    <hr> 
+
+    <div class="page-header">
+        <h1 class="page-title">My Courses</h1>
+    </div>
     
     <div class="course-grid">
         <?php if ($total_kelas > 0): ?>
