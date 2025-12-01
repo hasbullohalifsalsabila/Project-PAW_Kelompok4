@@ -1,0 +1,152 @@
+body {
+    margin: 0;
+    background: #F4EFE7;
+    font-family: "Inter", sans-serif;
+    color: #3A3730;
+}
+
+.nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px 60px;
+    background: #FBF8F2;
+    border-bottom: 1px solid #E6E0D8;
+}
+
+.logo {
+    font-family: "Playfair Display", serif;
+    font-size: 28px;
+}
+.logo span {
+    color: #C39A6B;
+}
+
+.nav-links a {
+    margin-left: 28px;
+    text-decoration: none;
+    color: #4A463F;
+    font-weight: 500;
+}
+
+.btn-login {
+    padding: 8px 14px;
+    border: 1px solid #C39A6B;
+    border-radius: 8px;
+    color: #C39A6B !important;
+}
+
+/* HERO */
+.hero {
+    display: flex;
+    align-items: center;
+    padding: 80px 60px;
+}
+
+.hero-text {
+    max-width: 500px;
+}
+
+.hero-text h1 {
+    font-family: "Playfair Display", serif;
+    font-size: 56px;
+    line-height: 1.2;
+}
+
+.highlight {
+    color: #C19A70;
+}
+
+.btn-primary {
+    display: inline-block;
+    background: #C39A6B;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    text-decoration: none;
+    margin-top: 18px;
+}
+
+.hero-img {
+    width: 480px;
+    border-radius: 16px;
+}
+
+/* FEATURES */
+.section-title {
+    font-family: "Playfair Display", serif;
+    font-size: 36px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.features {
+    padding: 60px 60px;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 22px;
+}
+
+.feature-card {
+    background: white;
+    padding: 26px;
+    border-radius: 14px;
+    box-shadow: rgba(0,0,0,0.07) 0 3px 8px;
+}
+
+/* COURSE PREVIEW */
+.courses {
+    padding: 60px;
+}
+
+.course-list {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 22px;
+}
+
+.course-card {
+    background: white;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: rgba(0,0,0,0.06) 0 3px 7px;
+}
+
+.price {
+    display: block;
+    margin-top: 12px;
+    font-weight: bold;
+    color: #C39A6B;
+}
+
+.btn-secondary {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid #C19A70;
+    border-radius: 10px;
+    text-decoration: none;
+    color: #C19A70;
+}
+
+.center {
+    text-align: center;
+    margin-top: 30px;
+}
+
+/* CTA */
+.cta {
+    text-align: center;
+    padding: 80px 40px;
+    background: #EBE4DA;
+    border-radius: 20px;
+    margin: 50px;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #5A544C;
+    margin-top: 40px;
+}
