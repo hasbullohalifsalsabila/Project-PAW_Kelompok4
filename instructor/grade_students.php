@@ -198,7 +198,8 @@ $students = $stmt->fetchAll();
                             Skor Kuis (Otomatis)
                         <?php endif; ?>
                     </th>
-                    <th width="15%" style="text-align:center;">Aksi</th>
+                    <th width="15%" style="text-align:center;">Aksi 1</th>
+                    <th width="15%" style="text-align:center;">Aksi 2</th>
                 </tr>
             </thead>
             <tbody>
