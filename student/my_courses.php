@@ -158,7 +158,7 @@ $courses = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
                     <div style="margin-top:auto;">
                         <?php if($is_graduated): ?>
-                            <a href="#" class="btn-action btn-cert">
+                            <a href="my_certificates.php" class="btn-action btn-cert">
                                 <i class="fa-solid fa-certificate"></i> Lihat Sertifikat
                             </a>
                             <a href="../courses/view.php?id=<?=$c['course_id']?>" style="display:block; text-align:center; margin-top:10px; color:#666; font-size:0.85rem; text-decoration:none;">
