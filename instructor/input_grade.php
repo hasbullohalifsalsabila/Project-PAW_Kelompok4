@@ -2,6 +2,7 @@
 require '../config/db.php';
 require 'header.php';
 require 'sidebar.php';
+// nambah
 
 // Pastikan parameter student dan course ada
 if (!isset($_GET['student']) || !isset($_GET['course'])) {
